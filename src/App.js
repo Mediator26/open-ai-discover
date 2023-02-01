@@ -30,7 +30,10 @@ const completionFunction = async (newPrompt) => {
 }
 
 function App() {
-  const [listMessages, setListMessages] = useState([]);
+  const [listMessages, setListMessages] = useState([{
+    messageSent: "You: What have you been up to?\nFriend: Watching old",
+    response: "You: Are you looking it in HD?"
+  }]);
   const [showProgress, setShowProgress] = useState(false);
   
   function sendMessage(message) {
@@ -50,7 +53,7 @@ function App() {
       alignItems="center"
       flexDirection="column"
       sx={{ width: '100%' }}>
-        
+
       <PromptComponent func={sendMessage} />
       <ResponseComponent title="Response" messages={listMessages} />
     </Box>
