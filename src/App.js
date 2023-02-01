@@ -5,6 +5,9 @@ import { Configuration, OpenAIApi } from 'openai';
 import PromptComponent from './PromptComponent';
 import { useState } from 'react';
 
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
+
 const configuration = new Configuration({
   apiKey: process.env.REACT_APP_OPENAI_API_KEY,
 });
@@ -27,19 +30,30 @@ const completionFunction = async (newPrompt) => {
 }
 
 function App() {
-  const [response, setResponse] = useState("");
   const [listMessages, setListMessages] = useState([]);
+  const [showProgress, setShowProgress] = useState(false);
   
-  function sendMessage(message){
+  function sendMessage(message) {
+    setShowProgress(true);
     completionFunction(message).then((r) => {
-      setResponse(r);
-      setListMessages(listMessages => [...listMessages, r]);
+      setListMessages(listMessages => [...listMessages, {
+        messageSent: message,
+        response: r
+      }]);
+      setShowProgress(false);
     });
   }
-  return (
-    <div className="App">
-      <PromptComponent func={sendMessage}/>
-      <ResponseComponent title="Response" messages={ listMessages } />
+  return (<div>
+    {showProgress && <LinearProgress />}
+    <Box className="App"
+      display="flex"
+      alignItems="center"
+      flexDirection="column"
+      sx={{ width: '100%' }}>
+        
+      <PromptComponent func={sendMessage} />
+      <ResponseComponent title="Response" messages={listMessages} />
+    </Box>
     </div>
   );
 }
